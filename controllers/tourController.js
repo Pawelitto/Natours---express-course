@@ -12,27 +12,27 @@ exports.getAllTours = async (req, res) => {
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
-    let query = await Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
 
     // Sorting errors
 
-    // if (req.query.sort) {
-    //   const sortBy = req.query.sort.split(',').join(' ');
-    //   console.log(sortBy);
-    //   query = query.sort('price');
-    // } else {
-    //   query = query.sort([['createdAt', 'asc']]);
-    // }
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort([['createdAt', 'asc']]);
+    }
 
     // Field limiting errors
-    // if (req.query.fields) {
-    //   const fields = req.query.fields.split(',').join(' ');
-    //   console.log(fields);
-    //   query = query.select('-price');
-    //   query = query.fields('price images');
-    // } else {
-    // query = query.select('-__v');
-    // }
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
+
+    // Pagination
+    // query = query.skip(2).limit(10);
 
     const tours = await query;
 
