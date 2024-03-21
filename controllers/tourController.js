@@ -7,13 +7,12 @@ exports.getAllTours = async (req, res) => {
 
     excludedFields.forEach(el => delete queryObj[el]);
 
-    const tours = await Tour.find(queryObj);
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
-    // const tours = await Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
+    const query = await Tour.find(JSON.parse(queryStr));
+
+    const tours = await query;
 
     res.status(200).json({
       status: 'success',
