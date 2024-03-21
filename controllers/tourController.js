@@ -14,13 +14,24 @@ exports.getAllTours = async (req, res) => {
 
     let query = await Tour.find(JSON.parse(queryStr));
 
-    // Sorting
+    // Sorting errors
 
     // if (req.query.sort) {
     //   const sortBy = req.query.sort.split(',').join(' ');
-    //   query = query.sort(sortBy);
+    //   console.log(sortBy);
+    //   query = query.sort('price');
     // } else {
     //   query = query.sort([['createdAt', 'asc']]);
+    // }
+
+    // Field limiting errors
+    // if (req.query.fields) {
+    //   const fields = req.query.fields.split(',').join(' ');
+    //   console.log(fields);
+    //   query = query.select('-price');
+    //   query = query.fields('price images');
+    // } else {
+    // query = query.select('-__v');
     // }
 
     const tours = await query;
@@ -33,6 +44,7 @@ exports.getAllTours = async (req, res) => {
       }
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       status: 'fail',
       message: err
